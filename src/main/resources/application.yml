@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: dev
+
+server:
+  context-path: /gmp/
+  connection-timeout: 2000
+  display-name: General MerchantReq Patform
+  port: 8082
+  undertow:
+    accesslog:
+      enabled: true
+    io-threads: 1
+    worker-threads: 1000
+
+mybatis:
+  type-aliases-package: com.go.gmp.dal.model
+

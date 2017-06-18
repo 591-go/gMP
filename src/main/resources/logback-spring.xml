@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+
+    <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/payment/merchant/merchant.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/Users/jiang/lakala/dts-center/merchant-%i.%d{yyyy-MM-dd}.log.gz
+            </fileNamePattern>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <MaxFileSize>30MB</MaxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] %-5level [%thread] %logger{80} :%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.springframework">
+        <level value="info"/>
+    </logger>
+    <logger name="java.sql">
+        <level value="error"/>
+    </logger>
+    <logger name="org.apache">
+        <level value="info"/>
+    </logger>
+
+    <logger name="jdbc.sqltiming">
+        <level value="INFO"/>
+    </logger>
+    <logger name="jdbc.sqlonly">
+        <level value="OFF"/>
+    </logger>
+    <logger name="jdbc.audit">
+        <level value="OFF"/>
+    </logger>
+    <logger name="jdbc.resultset">
+        <level value="OFF"/>
+    </logger>
+    <logger name="jdbc.connection">
+        <level value="OFF"/>
+    </logger>
+
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="logfile"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="sit">
+        <root level="INFO">
+            <appender-ref ref="logfile"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prd">
+        <root level="INFO">
+            <appender-ref ref="logfile"/>
+        </root>
+    </springProfile>
+
+
+</configuration>
