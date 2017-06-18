@@ -4,9 +4,7 @@ import com.go.gmp.api.MerchantCommonResp;
 import com.go.gmp.api.MerchantCreateRsp;
 import com.go.gmp.api.MerchantReq;
 import com.go.gmp.api.merchant.MerchantDto;
-import com.go.gmp.common.BizException;
-import com.go.gmp.common.InnerException;
-import com.go.gmp.common.RespCode;
+import com.go.gmp.common.*;
 import com.go.gmp.core.MerchantService;
 import com.go.gmp.dal.model.MerchantVo;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * 提供商户服务
  */
 @RestController
-public class MerchantController {
+public class MerchantController extends MyExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(MerchantController.class);
 
 
@@ -35,7 +33,7 @@ public class MerchantController {
         logger.info("enter createMerchant,req = {}", ToStringBuilder.reflectionToString(merchant, ToStringStyle.SHORT_PREFIX_STYLE));
         if (StringUtils.isBlank(merchant.getMerchantName()) || StringUtils.isBlank(merchant.getMerchantFullName())) {
             logger.warn("商户名或商户全称为空");
-            throw new RuntimeException("商户名或商户全称为空");
+            throw new BadParamException(RespCode.PARAM_ERR.getRetCode(), "商户名或商户全称不能为空");
         }
         String merchantCode;
         try {
@@ -66,7 +64,7 @@ public class MerchantController {
         logger.info("enter queryMercahntByMerchantCode ,param = {}", merchantCode);
         if (StringUtils.isBlank(merchantCode)) {
             logger.warn("商户号为空");
-            throw new BizException(RespCode.PARAM_ERR);
+            throw new BadParamException(RespCode.PARAM_ERR.getRetCode(), "商户号不能为空");
         }
         MerchantVo merchantVo = null;
         try {
@@ -77,7 +75,7 @@ public class MerchantController {
         }
         if (null == merchantVo) {
             logger.warn("查询结果为空");
-            throw new BizException(RespCode.NOT_FOUND);
+            throw new NotFoundException(merchantCode + ",查询无结果");
         }
         MerchantDto merchantDto = new MerchantDto();
         BeanUtils.copyProperties(merchantVo, merchantDto);
@@ -95,7 +93,7 @@ public class MerchantController {
         logger.info("enter modifyMerchantMainInfo,param = {}", ToStringBuilder.reflectionToString(merchantReq, ToStringStyle.SHORT_PREFIX_STYLE));
         if (null == merchantReq || StringUtils.isBlank(merchantReq.getMerchantCode())) {
             logger.warn("mercahntCode为空");
-            throw new BizException(RespCode.PARAM_ERR);
+            throw new BadParamException(RespCode.PARAM_ERR.getRetCode(), "商户号不能为空");
         }
         MerchantCommonResp resp = new MerchantCommonResp();
         try {
